@@ -8,16 +8,14 @@ package autonoma.TaquillaCine.models;
  *
  * @author ACER
  */
-public abstract class Usuario {
-    protected String nombre;
+public class Adulto extends Usuario {
 
-    public Usuario(String nombre) {
-        this.nombre = nombre;
+    public Adulto(String nombre) {
+        super(nombre);
     }
 
-    public String getNombre() {
-        return nombre;
+    @Override
+    public double calcularPorcentajeDescuentoUsuario() {
+        return 0.0; // Sin descuento
     }
-
-    public abstract double calcularPorcentajeDescuentoUsuario();
 }

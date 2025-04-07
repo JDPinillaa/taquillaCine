@@ -8,6 +8,6 @@ package autonoma.TaquillaCine.models;
  *
  * @author ACER
  */
-public class Funcion {
-    
+public abstract class Funcion {
+    public abstract double calcularDescuentoFuncion();
 }

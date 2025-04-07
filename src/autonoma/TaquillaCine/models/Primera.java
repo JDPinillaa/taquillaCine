@@ -8,16 +8,10 @@ package autonoma.TaquillaCine.models;
  *
  * @author ACER
  */
-public abstract class Usuario {
-    protected String nombre;
+public class Primera extends Funcion {
 
-    public Usuario(String nombre) {
-        this.nombre = nombre;
+    @Override
+    public double calcularDescuentoFuncion() {
+        return 0.2; // 20% de descuento por función temprana
     }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public abstract double calcularPorcentajeDescuentoUsuario();
 }
