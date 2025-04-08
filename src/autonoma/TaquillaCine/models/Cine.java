@@ -4,13 +4,19 @@
  */
 package autonoma.TaquillaCine.models;
 
-/**
- *
- * @author ACER
- */
+import autonoma.TaquillaCine.exceptions.BoletaNegativaException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Representa un cine que gestiona películas, usuarios, ventas y facturas.
+ * Permite realizar operaciones como agregar películas, registrar usuarios,
+ * vender boletas y generar facturas.
+ * 
+ * @author Santiago Uribe
+ * @since 2025-04-02
+ * @version 1.0
+ */
 public class Cine {
     private List<Pelicula> peliculas;
     private List<Factura> facturas;
@@ -18,6 +24,10 @@ public class Cine {
     private List<Usuario> usuarios;
     private Cartelera cartelera;
 
+    /**
+     * Constructor de la clase Cine.
+     * Inicializa las listas de películas, usuarios, ventas y facturas.
+     */
     public Cine() {
         this.peliculas = new ArrayList<>();
         this.usuarios = new ArrayList<>();
@@ -27,27 +37,59 @@ public class Cine {
     }
 
     // Gestión de películas
+
+    /**
+     * Agrega una película a la cartelera del cine.
+     * 
+     * @param pelicula La película que se desea agregar.
+     */
     public void agregarPelicula(Pelicula pelicula) {
         cartelera.agregarPelicula(pelicula);
     }
-    
+
+    /**
+     * Elimina una película de la cartelera del cine.
+     * 
+     * @param pelicula La película que se desea eliminar.
+     */
     public void eliminarPelicula(Pelicula pelicula) {
         cartelera.eliminarPelicula(pelicula);
     }
 
+    /**
+     * Muestra las películas disponibles en la cartelera.
+     * 
+     * @return Una lista de las películas disponibles en la cartelera.
+     */
     public List<Pelicula> mostrarCartelera() {
         return new ArrayList<>(cartelera.getPeliculas());
     }
 
     // Gestión de usuarios
+
+    /**
+     * Registra un usuario en el sistema del cine.
+     * 
+     * @param usuario El usuario que se desea registrar.
+     */
     public void registrarUsuario(Usuario usuario) {
         usuarios.add(usuario);
     }
 
+    /**
+     * Obtiene la lista de usuarios registrados en el cine.
+     * 
+     * @return Una lista de los usuarios registrados.
+     */
     public List<Usuario> getUsuarios() {
         return usuarios;
     }
-    
+
+    /**
+     * Elimina un usuario del sistema del cine.
+     * 
+     * @param usuario El usuario que se desea eliminar.
+     */
     public void eliminarUsuario(Usuario usuario) {
         if (usuarios.removeIf(u -> u.getNombre().equalsIgnoreCase(usuario.getNombre()))) {
             System.out.println("Usuario eliminado correctamente.");
@@ -55,8 +97,16 @@ public class Cine {
             System.out.println("Usuario no encontrado.");
         }
     }
-    
+
     // Venta de boletas
+
+    /**
+     * Vende boletas para una función específica.
+     * 
+     * @param usuario  El usuario que compra las boletas.
+     * @param funcion  La función de cine asociada a las boletas.
+     * @param cantidad La cantidad de boletas a comprar.
+     */
     public void venderBoleta(Usuario usuario, Funcion funcion, int cantidad) {
         if (usuario == null || funcion == null) {
             System.out.println("Usuario o función no pueden ser nulos.");
@@ -99,6 +149,14 @@ public class Cine {
     }
 
     // Generar factura
+
+    /**
+     * Genera una factura para una venta específica.
+     * 
+     * @param boletas La lista de boletas asociadas a la venta.
+     * @param usuario El usuario que realizó la compra.
+     * @return La factura generada para la venta.
+     */
     public Factura generarFactura(List<Boleta> boletas, Usuario usuario) {
         if (boletas == null || boletas.isEmpty()) {
             System.out.println("No se pueden generar facturas sin boletas.");

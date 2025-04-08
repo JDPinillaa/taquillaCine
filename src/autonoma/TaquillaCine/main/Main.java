@@ -1,5 +1,6 @@
 package autonoma.TaquillaCine.main;
 
+import autonoma.TaquillaCine.exceptions.BoletaNegativaException;
 import autonoma.TaquillaCine.models.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +62,7 @@ public class Main {
                             boletas.add(boleta);
                         } catch (BoletaNegativaException e) {
                             System.out.println("Error al calcular el precio de la boleta: " + e.getMessage());
-                            return; // Salir del caso si ocurre un error
+                            return; 
                         }
                     }
 
