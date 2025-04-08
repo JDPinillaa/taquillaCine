@@ -10,8 +10,12 @@ package autonoma.TaquillaCine.models;
  */
 public class Primera extends Funcion {
 
+    public Primera(Pelicula pelicula, int asientosDisponibles) {
+        super(pelicula, asientosDisponibles);
+    }
+
     @Override
     public double calcularDescuentoFuncion() {
-        return 0.2; // 20% de descuento por función temprana
+        return 0.5; // 50% de descuento
     }
 }

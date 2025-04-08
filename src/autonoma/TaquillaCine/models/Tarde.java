@@ -10,8 +10,12 @@ package autonoma.TaquillaCine.models;
  */
 public class Tarde extends Funcion {
 
+    public Tarde(Pelicula pelicula, int asientosDisponibles) {
+        super(pelicula, asientosDisponibles);
+    }
+
     @Override
     public double calcularDescuentoFuncion() {
-        return 0.1; // 10% de descuento por función de la tarde
+        return 0.1; // 10% de descuento
     }
 }

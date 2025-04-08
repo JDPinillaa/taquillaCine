@@ -8,18 +8,26 @@ package autonoma.TaquillaCine.models;
  *
  * @author ACER
  */
-import java.util.ArrayList;
 import java.util.List;
 
 public class Venta {
+    private Usuario usuario; // Usuario asociado a la venta
     private List<Boleta> boletas;
 
-    public Venta() {
-        this.boletas = new ArrayList<>();
+    public Venta(Usuario usuario, List<Boleta> boletas) {
+        if (usuario == null || boletas == null || boletas.isEmpty()) {
+            throw new IllegalArgumentException("Usuario y boletas no pueden ser nulos o vacíos.");
+        }
+        this.usuario = usuario;
+        this.boletas = boletas;
     }
 
-    public void agregarBoleta(Boleta boleta) {
-        boletas.add(boleta);
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public List<Boleta> getBoletas() {
+        return boletas;
     }
 
     public double calcularTotalVenta() {
@@ -30,14 +38,11 @@ public class Venta {
         return total;
     }
 
-    public List<Boleta> getBoletas() {
-        return boletas;
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("Venta:\n");
+        sb.append("Venta realizada por: ").append(usuario.getNombre()).append("\n");
+        sb.append("Boletas:\n");
         for (Boleta boleta : boletas) {
             sb.append(boleta.toString()).append("\n");
         }

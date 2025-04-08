@@ -1,7 +1,8 @@
 package autonoma.TaquillaCine.main;
 
 import autonoma.TaquillaCine.models.*;
-
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -24,31 +25,51 @@ public class Main {
             switch (opcion) {
                 case 1:
                     // Vender boletas
-                    ventaActual = new Venta(usuario, boletas);
                     System.out.print("Nombre de la película: ");
                     String nombrePeli = scanner.nextLine();
-                    Pelicula peli = new Pelicula(nombrePeli, 10000); // costo base fijo
+                    System.out.print("Costo base de la película: ");
+                    double costoBase = scanner.nextDouble();
+                    scanner.nextLine();
+                    Pelicula peli = new Pelicula(nombrePeli, costoBase);
+
+                    System.out.print("Número de asientos disponibles para la función: ");
+                    int asientos = scanner.nextInt();
+                    scanner.nextLine();
+
                     System.out.println("Seleccione función: 1. Primera (50%) 2. Tarde (10%) 3. Noche (0%)");
                     int f = scanner.nextInt();
-                    Funcion funcion = (f == 1) ? new Primera() : (f == 2) ? new Tarde() : new Noche();
+                    scanner.nextLine();
+                    Funcion funcion = (f == 1) ? new Primera(peli, asientos) :
+                                      (f == 2) ? new Tarde(peli, asientos) :
+                                      new Noche(peli, asientos);
 
                     System.out.println("Tipo de usuario: 1. Niño 2. Adulto 3. Mayor");
                     int tipo = scanner.nextInt();
+                    scanner.nextLine();
                     Usuario usuario = (tipo == 1) ? new Niño("Niño") :
                                       (tipo == 2) ? new Adulto("Adulto") :
                                       new Mayor("Mayor");
 
-                    Boleta boleta = new Boleta(peli, funcion, usuario);
-                    ventaActual.agregarBoleta(boleta);
+                    System.out.print("Cantidad de boletas a comprar: ");
+                    int cantidad = scanner.nextInt();
+                    scanner.nextLine();
 
-                    System.out.println("Boleta registrada con éxito.");
-                    break;S
+                    List<Boleta> boletas = new ArrayList<>();
+                    for (int i = 0; i < cantidad; i++) {
+                        Boleta boleta = new Boleta(peli, usuario, funcion);
+                        boletas.add(boleta);
+                    }
+
+                    ventaActual = new Venta(usuario, boletas);
+                    System.out.println("Venta registrada con éxito.");
+                    break;
 
                 case 2:
                     // Generar factura
                     if (ventaActual != null) {
-                        Factura factura = cine.venderBoletas(ventaActual);
-                        cine.generarFactura(factura);
+                        Factura factura = cine.generarFactura(ventaActual.getBoletas(), ventaActual.getUsuario());
+                        System.out.println("Factura generada con éxito:");
+                        System.out.println(factura.toString());
                     } else {
                         System.out.println("Debe realizar una venta primero.");
                     }
@@ -63,12 +84,15 @@ public class Main {
                         case 1:
                             System.out.print("Nombre de la película: ");
                             String nueva = scanner.nextLine();
-                            cine.agregarPelicula(new Pelicula(nueva, 10000));
+                            System.out.print("Costo base de la película: ");
+                            double costo = scanner.nextDouble();
+                            scanner.nextLine();
+                            cine.agregarPelicula(new Pelicula(nueva, costo));
                             break;
                         case 2:
                             System.out.print("Nombre de la película a eliminar: ");
                             String elim = scanner.nextLine();
-                            cine.eliminarPelicula(new Pelicula(elim, 10000));
+                            cine.eliminarPelicula(new Pelicula(elim, 0)); // El costo no es relevante para eliminar
                             break;
                         case 3:
                             for (Pelicula p : cine.mostrarCartelera()) {
@@ -85,23 +109,25 @@ public class Main {
                     scanner.nextLine();
                     switch (opUser) {
                         case 1:
+                            System.out.print("Nombre del usuario: ");
+                            String nombreUsuario = scanner.nextLine();
                             System.out.print("Tipo de usuario (Niño, Adulto, Mayor): ");
                             String tipoUser = scanner.nextLine();
-                            Usuario nuevo;
+                            Usuario nuevoUsuario;
                             if (tipoUser.equalsIgnoreCase("Niño")) {
-                                nuevo = new Niño(tipoUser);
+                                nuevoUsuario = new Niño(nombreUsuario);
                             } else if (tipoUser.equalsIgnoreCase("Adulto")) {
-                                nuevo = new Adulto(tipoUser);
+                                nuevoUsuario = new Adulto(nombreUsuario);
                             } else {
-                                nuevo = new Mayor(tipoUser);
+                                nuevoUsuario = new Mayor(nombreUsuario);
                             }
-                            cine.registrarUsuario(nuevo);
+                            cine.registrarUsuario(nuevoUsuario);
                             break;
                         case 2:
-                            System.out.print("Tipo de usuario a eliminar: ");
-                            String eliminar = scanner.nextLine();
-                            Usuario eliminarUsuario = new Adulto(eliminar); // simplificado
-                            cine.eliminarUsuario(eliminarUsuario);
+                            System.out.print("Nombre del usuario a eliminar: ");
+                            String eliminarUsuario = scanner.nextLine();
+                            Usuario usuarioAEliminar = new Adulto(eliminarUsuario); // Tipo no relevante para eliminar
+                            cine.eliminarUsuario(usuarioAEliminar);
                             break;
                         case 3:
                             for (Usuario u : cine.getUsuarios()) {

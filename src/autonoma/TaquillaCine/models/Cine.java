@@ -13,8 +13,8 @@ import java.util.List;
 
 public class Cine {
     private List<Pelicula> peliculas;
-    private ArrayList<Factura> facturas = new ArrayList<>();
-    private ArrayList<Venta> ventas = new ArrayList<>();
+    private List<Factura> facturas;
+    private List<Venta> ventas;
     private List<Usuario> usuarios;
     private Cartelera cartelera;
 
@@ -35,7 +35,7 @@ public class Cine {
         cartelera.eliminarPelicula(pelicula);
     }
 
-    public ArrayList<Pelicula> mostrarCartelera() {
+    public List<Pelicula> mostrarCartelera() {
         return new ArrayList<>(cartelera.getPeliculas());
     }
 
@@ -49,37 +49,63 @@ public class Cine {
     }
     
     public void eliminarUsuario(Usuario usuario) {
-    if (usuarios.removeIf(u -> u.getNombre().equalsIgnoreCase(usuario.getNombre()))) {
-        System.out.println("Usuario eliminado correctamente.");
-    } else {
-        System.out.println("Usuario no encontrado.");
-    }
+        if (usuarios.removeIf(u -> u.getNombre().equalsIgnoreCase(usuario.getNombre()))) {
+            System.out.println("Usuario eliminado correctamente.");
+        } else {
+            System.out.println("Usuario no encontrado.");
+        }
     }
     
+    // Venta de boletas
     public void venderBoleta(Usuario usuario, Funcion funcion, int cantidad) {
-    ArrayList<Boleta> boletas = new ArrayList<>();
+        if (usuario == null || funcion == null) {
+            System.out.println("Usuario o función no pueden ser nulos.");
+            return;
+        }
 
-    for (int i = 0; i < cantidad; i++) {
-        Boleta boleta = new Boleta(funcion, usuario);
-        boletas.add(boleta);
+        if (cantidad <= 0) {
+            System.out.println("La cantidad de boletas debe ser mayor a 0.");
+            return;
+        }
+
+        if (funcion.getAsientosDisponibles() < cantidad) {
+            System.out.println("No hay suficientes asientos disponibles para esta función.");
+            return;
+        }
+
+        List<Boleta> boletas = new ArrayList<>();
+        for (int i = 0; i < cantidad; i++) {
+            Pelicula pelicula = funcion.getPelicula(); // Obtener la película asociada a la función
+            Boleta boleta = new Boleta(pelicula, usuario, funcion);
+            boletas.add(boleta);
+        }
+
+        // Actualizar asientos disponibles en la función
+        funcion.reducirAsientosDisponibles(cantidad);
+
+        Venta venta = new Venta(usuario, boletas);
+        ventas.add(venta);
+
+        Factura factura = new Factura(venta);
+        facturas.add(factura);
+
+        System.out.println("Venta realizada con éxito. Factura generada:");
+        System.out.println(factura.toString());
     }
 
-    Venta venta = new Venta(usuario, boletas);
-    ventas.add(venta);
-
-    Factura factura = new Factura(venta);
-    facturas.add(factura);
-
-    System.out.println("Venta realizada con éxito. Factura generada:");
-    System.out.println(factura.toString());
-}
-
-    // Generar venta y factura
-    public Factura generarFactura(List<Boleta> boletas) {
-        Venta venta = new Venta();
-        for (Boleta boleta : boletas) {
-            venta.agregarBoleta(boleta);
+    // Generar factura
+    public Factura generarFactura(List<Boleta> boletas, Usuario usuario) {
+        if (boletas == null || boletas.isEmpty()) {
+            System.out.println("No se pueden generar facturas sin boletas.");
+            return null;
         }
-        return new Factura(venta);
+
+        Venta venta = new Venta(usuario, boletas);
+        ventas.add(venta);
+
+        Factura factura = new Factura(venta);
+        facturas.add(factura);
+
+        return factura;
     }
 }
