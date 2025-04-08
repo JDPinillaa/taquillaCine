@@ -56,8 +56,13 @@ public class Main {
 
                     List<Boleta> boletas = new ArrayList<>();
                     for (int i = 0; i < cantidad; i++) {
-                        Boleta boleta = new Boleta(peli, usuario, funcion);
-                        boletas.add(boleta);
+                        try {
+                            Boleta boleta = new Boleta(peli, usuario, funcion);
+                            boletas.add(boleta);
+                        } catch (BoletaNegativaException e) {
+                            System.out.println("Error al calcular el precio de la boleta: " + e.getMessage());
+                            return; // Salir del caso si ocurre un error
+                        }
                     }
 
                     ventaActual = new Venta(usuario, boletas);

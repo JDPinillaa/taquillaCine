@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package autonoma.TaquillaCine.models;
+import autonoma.TaquillaCine.exceptions.BoletaNegativaException;
 
 /**
  *
@@ -14,20 +15,25 @@ public class Boleta {
     private Funcion funcion;
     private double precioFinal;
 
-    public Boleta(Pelicula pelicula, Usuario usuario, Funcion funcion) {
+    public Boleta(Pelicula pelicula, Usuario usuario, Funcion funcion) throws BoletaNegativaException {
         this.pelicula = pelicula;
         this.usuario = usuario;
         this.funcion = funcion;
         this.precioFinal = calcularPrecio(); // Se calcula al crear
     }
 
-    public double calcularPrecio() {
+    public double calcularPrecio() throws BoletaNegativaException {
         double precioBase = pelicula.getPrecioIndividual();
         double descuentoUsuario = usuario.calcularPorcentajeDescuentoUsuario(); // Por ejemplo, 0.25 para niños
         double descuentoFuncion = funcion.calcularDescuentoFuncion(); // Por ejemplo, 0.1 para tarde
 
         double totalDescuento = descuentoUsuario + descuentoFuncion;
         precioFinal = precioBase * (1 - totalDescuento);
+
+        if (precioFinal < 0) {
+            throw new BoletaNegativaException("El precio de la boleta no puede ser negativo.");
+        }
+
         return precioFinal;
     }
 

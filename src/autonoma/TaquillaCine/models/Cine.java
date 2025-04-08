@@ -75,9 +75,14 @@ public class Cine {
 
         List<Boleta> boletas = new ArrayList<>();
         for (int i = 0; i < cantidad; i++) {
-            Pelicula pelicula = funcion.getPelicula(); // Obtener la película asociada a la función
-            Boleta boleta = new Boleta(pelicula, usuario, funcion);
-            boletas.add(boleta);
+            try {
+                Pelicula pelicula = funcion.getPelicula(); // Obtener la película asociada a la función
+                Boleta boleta = new Boleta(pelicula, usuario, funcion);
+                boletas.add(boleta);
+            } catch (BoletaNegativaException e) {
+                System.out.println("Error al calcular el precio de la boleta: " + e.getMessage());
+                return; // Salir del método si ocurre un error
+            }
         }
 
         // Actualizar asientos disponibles en la función
